@@ -1,19 +1,20 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-import json
+
+# from django.http import JsonResponse
+# import json
+from django.forms.models import model_to_dict
+from projects.models import Projects
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from projects.serializers import ProjectsSerializer
 
 
+@api_view(["GET"])
 def api_home(request, *args, **kwargs):
-    body = request.body  # Byte string of JSON data
+    """DRF API View"""
+    instance = Projects.objects.all().order_by("?").first()
     data = {}
-    print(request.GET)  # URL query parameters
-    print(request.POST)
-    try:
-        data = json.loads(body)  # String of JSON data -> Python Dict
-    except:
-        pass
-    print(data.keys())
-    data["params"] = dict(request.GET)
-    data["headers"] = dict(request.headers)
-    data["content_type"] = request.content_type
-    return JsonResponse(data)
+    if instance:
+        # data = model_to_dict(model_data)
+        data = ProjectsSerializer(instance).data
+    return Response(data)
