@@ -9,8 +9,8 @@ class Projects(models.Model):
     type = models.CharField(max_length=128, blank=True)
 
     @property
-    def project_type(self):
-        return self.type
+    def project_id(self):
+        return self.id
 
 
 # class Contributors(models.Model):
