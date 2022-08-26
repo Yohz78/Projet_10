@@ -1,9 +1,13 @@
 from django.db import models
+from django.conf import settings
 
 
 class Projects(models.Model):
     """Projects model. Use to save a project."""
 
+    # author_user_id = models.ForeignKey(
+    #     to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    # )
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=2048, blank=True)
     type = models.CharField(max_length=128, blank=True)
