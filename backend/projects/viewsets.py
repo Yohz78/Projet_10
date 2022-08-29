@@ -4,18 +4,24 @@ from .serializers import IssuesSerializer, ProjectsSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
+    """Projects ViewSet"""
+
     queryset = Projects.objects.all()
     serializer_class = ProjectsSerializer
     lookup_field = "pk"
 
 
 class IssueViewSet(viewsets.ModelViewSet):
+    """Projects ViewSet"""
+
     queryset = Issues.objects.all()
     serializer_class = IssuesSerializer
     lookup_field = "pk"
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Projects ViewSet"""
+
     queryset = Comments.objects.all()
     serializer_class = IssuesSerializer
     lookup_field = "pk"

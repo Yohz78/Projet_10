@@ -10,10 +10,6 @@ class Projects(models.Model):
     description = models.TextField(max_length=2048, blank=True)
     type = models.CharField(max_length=128, blank=True)
 
-    @property
-    def project_id(self):
-        return self.id
-
 
 class Contributors(models.Model):
     """Contributors model. Link an user to a project."""
