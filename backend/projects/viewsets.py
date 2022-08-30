@@ -1,6 +1,12 @@
 from rest_framework import viewsets
-from .models import Projects, Issues, Comments
-from .serializers import IssuesSerializer, ProjectsSerializer
+from .models import Projects, Issues, Comments, Contributors
+from django.contrib.auth.models import User
+from .serializers import (
+    IssuesSerializer,
+    ProjectsSerializer,
+    CommentsSerializer,
+    ContributorsSerializer,
+)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -10,18 +16,38 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectsSerializer
     lookup_field = "pk"
 
+    def perform_create(self, serializer):
+        author = self.request.user
+        serializer.save(author_user_id=author)
+
 
 class IssueViewSet(viewsets.ModelViewSet):
-    """Projects ViewSet"""
+    """Issues ViewSet"""
 
     queryset = Issues.objects.all()
     serializer_class = IssuesSerializer
     lookup_field = "pk"
 
+    def perform_create(self, serializer):
+        author = self.request.user
+        serializer.save(author_user_id=author)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """Projects ViewSet"""
+    """Comments ViewSet"""
 
     queryset = Comments.objects.all()
-    serializer_class = IssuesSerializer
+    serializer_class = CommentsSerializer
+    lookup_field = "pk"
+
+    def perform_create(self, serializer):
+        author = self.request.user
+        serializer.save(author_user_id=author)
+
+
+class ContributorViewSet(viewsets.ModelViewSet):
+    """Contributor ViewSet"""
+
+    queryset = Contributors.objects.all()
+    serializer_class = ContributorsSerializer
     lookup_field = "pk"
