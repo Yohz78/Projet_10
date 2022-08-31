@@ -30,7 +30,9 @@ class IssueViewSet(viewsets.ModelViewSet):
     """Issues ViewSet"""
 
     serializer_class = IssuesSerializer
-    permission_classes = [permissions.IsContributorOrowner]
+    permission_classes = [
+        permissions.IsContributorOrowner,
+    ]
     # authentication_classes = [authentication.TokenAuthentication]
 
     def get_queryset(self):
@@ -49,7 +51,9 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializer
-    permission_classes = [permissions.IsContributorOrowner]
+    permission_classes = [
+        permissions.IsContributorOrowner,
+    ]
     lookup_field = "pk"
 
     def get_queryset(self):

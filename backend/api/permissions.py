@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from projects import models
+from projects import viewsets
 
 
 class IsContributorOrowner(permissions.BasePermission):
@@ -7,9 +8,30 @@ class IsContributorOrowner(permissions.BasePermission):
     Project-level permission to only allow contributors of a project to edit it.
     """
 
+    def has_permission(self, request, view):
+        # Permission check before applying has_object_permission or when listing objects.
+        if type(view) == viewsets.ProjectViewSet:
+            return True
+            # project = models.Projects.objects.get(pk=view.kwargs["pk"])
+            # if request.user == project.author_user_id:
+            #     return True
+            # contributors = models.Contributors.objects.filter(
+            #     user_id=request.user, project_id=project.id
+            # )
+            # if contributors:
+            #     return True
+        else:
+            project = models.Projects.objects.get(pk=view.kwargs["project_pk"])
+            if request.user == project.author_user_id:
+                return True
+            contributors = models.Contributors.objects.filter(
+                user_id=request.user, project_id=project.id
+            )
+            if contributors:
+                return True
+
     def has_object_permission(self, request, view, obj):
         # Allow object owner to perform all CRUD actions
-        print(view.action)
         if request.user == obj.author_user_id:
             return True
 
@@ -24,7 +46,6 @@ class IsContributorOrowner(permissions.BasePermission):
 
         # If object type is Issue :
         if type(obj) == models.Issues:
-            print(type(obj))
             if (
                 request.user == obj.project_id.author_user_id
                 and request.method in permissions.SAFE_METHODS
@@ -35,7 +56,6 @@ class IsContributorOrowner(permissions.BasePermission):
             )
             if contributors:
                 if request.method in permissions.SAFE_METHODS:
-                    print("test")
                     return True
 
         # If object type is Comment:
