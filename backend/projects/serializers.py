@@ -1,7 +1,5 @@
 from rest_framework import serializers
-
 from .models import Projects, Issues, Comments, Contributors
-from django.contrib.auth.models import User
 
 
 class ProjectsSerializer(serializers.ModelSerializer):
@@ -19,7 +17,6 @@ class IssuesSerializer(serializers.ModelSerializer):
             "desc",
             "tag",
             "priority",
-            "project_id",
             "status",
             "created_time",
         ]
@@ -30,7 +27,6 @@ class CommentsSerializer(serializers.ModelSerializer):
         model = Comments
         fields = [
             "pk",
-            "issue_id",
             "description",
             "created_time",
         ]
@@ -39,4 +35,4 @@ class CommentsSerializer(serializers.ModelSerializer):
 class ContributorsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contributors
-        fields = ["pk", "permission", "project_id", "user_id"]
+        fields = ["pk", "permission", "user_id"]

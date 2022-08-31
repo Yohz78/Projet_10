@@ -19,7 +19,6 @@ projects_router.register(r"users", ContributorViewSet, basename="users")
 issues_router = routers.NestedSimpleRouter(projects_router, r"issues", lookup="issue")
 issues_router.register(r"comments", CommentViewSet, basename="comments")
 
-
 urlpatterns = [
     path(r"", include(router.urls)),
     path(r"", include(projects_router.urls)),

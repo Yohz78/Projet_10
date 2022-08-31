@@ -1,6 +1,9 @@
 from rest_framework import viewsets
+
+# from rest_framework import permissions
+
+from api import authentication, permissions
 from .models import Projects, Issues, Comments, Contributors
-from django.contrib.auth.models import User
 from .serializers import (
     IssuesSerializer,
     ProjectsSerializer,
@@ -14,6 +17,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     queryset = Projects.objects.all()
     serializer_class = ProjectsSerializer
+    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsContributorOrowner]
     lookup_field = "pk"
 
     def perform_create(self, serializer):
@@ -24,13 +29,19 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class IssueViewSet(viewsets.ModelViewSet):
     """Issues ViewSet"""
 
-    queryset = Issues.objects.all()
     serializer_class = IssuesSerializer
-    lookup_field = "pk"
+    permission_classes = [permissions.IsContributorOrowner]
+    # authentication_classes = [authentication.TokenAuthentication]
+
+    def get_queryset(self):
+        project = self.kwargs["project_pk"]
+        return Issues.objects.filter(project_id=project)
 
     def perform_create(self, serializer):
+        project_id = self.kwargs["project_pk"]
+        project = Projects.objects.filter(pk=project_id)[0]
         author = self.request.user
-        serializer.save(author_user_id=author)
+        serializer.save(author_user_id=author, project_id=project)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -38,11 +49,18 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializer
+    permission_classes = [permissions.IsContributorOrowner]
     lookup_field = "pk"
 
+    def get_queryset(self):
+        issue = self.kwargs["issue_pk"]
+        return Comments.objects.filter(issue_id=issue)
+
     def perform_create(self, serializer):
+        issue_id = self.kwargs["issue_pk"]
+        issue = Issues.objects.filter(pk=issue_id)[0]
         author = self.request.user
-        serializer.save(author_user_id=author)
+        serializer.save(author_user_id=author, issue_id=issue)
 
 
 class ContributorViewSet(viewsets.ModelViewSet):
@@ -50,4 +68,11 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     queryset = Contributors.objects.all()
     serializer_class = ContributorsSerializer
+    # permission_classes = [permissions.IsOwnerOrReadOnly]
+    # authentication_classes = [authentication.TokenAuthentication]
     lookup_field = "pk"
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs["project_pk"]
+        project = Projects.objects.filter(pk=project_id)[0]
+        serializer.save(project_id=project)
