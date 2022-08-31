@@ -12,14 +12,6 @@ class IsContributorOrowner(permissions.BasePermission):
         # Permission check before applying has_object_permission or when listing objects.
         if type(view) == viewsets.ProjectViewSet:
             return True
-            # project = models.Projects.objects.get(pk=view.kwargs["pk"])
-            # if request.user == project.author_user_id:
-            #     return True
-            # contributors = models.Contributors.objects.filter(
-            #     user_id=request.user, project_id=project.id
-            # )
-            # if contributors:
-            #     return True
         else:
             project = models.Projects.objects.get(pk=view.kwargs["project_pk"])
             if request.user == project.author_user_id:

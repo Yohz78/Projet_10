@@ -1,7 +1,4 @@
 from rest_framework import viewsets
-
-# from rest_framework import permissions
-
 from api import authentication, permissions
 from .models import Projects, Issues, Comments, Contributors
 from .serializers import (
@@ -72,7 +69,6 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     queryset = Contributors.objects.all()
     serializer_class = ContributorsSerializer
-    # permission_classes = [permissions.IsOwnerOrReadOnly]
     # authentication_classes = [authentication.TokenAuthentication]
     lookup_field = "pk"
 
