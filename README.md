@@ -1,5 +1,3 @@
-# English Instructions
-
 # LITReview: Minimum viable product for a django based application
 
 SoftAPI is a django rest API that has to be executed locally for demonstration purpose.
