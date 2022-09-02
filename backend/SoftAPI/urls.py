@@ -6,5 +6,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("SoftAPI.routers")),
     path("api/", include("api.urls")),
-    path("login/", obtain_auth_token, name="login"),
+    path("api/login/", obtain_auth_token, name="login"),
 ]

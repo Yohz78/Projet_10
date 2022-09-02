@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from api import authentication, permissions
+from rest_framework.permissions import IsAuthenticated
 from .models import Projects, Issues, Comments, Contributors
 from .serializers import (
     IssuesSerializer,
@@ -14,8 +15,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     queryset = Projects.objects.all()
     serializer_class = ProjectsSerializer
-    # authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsContributorOrowner]
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsContributorOrowner, IsAuthenticated]
     lookup_field = "pk"
 
     def perform_create(self, serializer):
@@ -28,9 +29,10 @@ class IssueViewSet(viewsets.ModelViewSet):
 
     serializer_class = IssuesSerializer
     permission_classes = [
+        IsAuthenticated,
         permissions.IsContributorOrowner,
     ]
-    # authentication_classes = [authentication.TokenAuthentication]
+    authentication_classes = [authentication.TokenAuthentication]
 
     def get_queryset(self):
         project = self.kwargs["project_pk"]
@@ -49,8 +51,10 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializer
     permission_classes = [
+        IsAuthenticated,
         permissions.IsContributorOrowner,
     ]
+    authentication_classes = [authentication.TokenAuthentication]
     lookup_field = "pk"
 
     def get_queryset(self):
@@ -69,7 +73,11 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     queryset = Contributors.objects.all()
     serializer_class = ContributorsSerializer
-    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [
+        IsAuthenticated,
+        permissions.IsProjectOwner,
+    ]
+    authentication_classes = [authentication.TokenAuthentication]
     lookup_field = "pk"
 
     def perform_create(self, serializer):

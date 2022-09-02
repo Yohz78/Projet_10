@@ -63,3 +63,11 @@ class IsContributorOrowner(permissions.BasePermission):
             if contributors:
                 if request.method in permissions.SAFE_METHODS:
                     return True
+
+
+class IsProjectOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        # Check if the logged in user is the author of the project before allowing CRUD.
+        project = models.Projects.objects.get(pk=view.kwargs["project_pk"])
+        if request.user == project.author_user_id:
+            return True

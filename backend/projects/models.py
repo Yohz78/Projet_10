@@ -6,11 +6,11 @@ class Projects(models.Model):
     """Projects model. Use to save a project."""
 
     author_user_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     title = models.CharField(max_length=128)
-    description = models.TextField(max_length=2048, blank=True)
-    type = models.CharField(max_length=128, blank=True)
+    description = models.TextField(max_length=2048)
+    type = models.CharField(max_length=128)
 
 
 class Issues(models.Model):
@@ -22,22 +22,22 @@ class Issues(models.Model):
     desc = models.CharField(max_length=128)
     tag = models.CharField(max_length=128)
     priority = models.CharField(max_length=150, choices=CHOICES)
-    project_id = models.ForeignKey(Projects, on_delete=models.CASCADE, null=True)
+    project_id = models.ForeignKey(Projects, on_delete=models.CASCADE)
     status = models.CharField(max_length=128)
     created_time = models.DateTimeField(auto_now_add=True)
     author_user_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
 
 class Comments(models.Model):
     """Comments model. Allow creation of comments on an issue."""
 
-    issue_id = models.ForeignKey(Issues, on_delete=models.CASCADE, blank="true")
-    description = models.TextField(max_length=2048, blank=True)
+    issue_id = models.ForeignKey(Issues, on_delete=models.CASCADE)
+    description = models.TextField(max_length=2048)
     created_time = models.DateTimeField(auto_now_add=True)
     author_user_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
 
@@ -46,8 +46,6 @@ class Contributors(models.Model):
 
     CHOICES = {("allowed", "Autorisé")}
 
-    user_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True
-    )
-    project_id = models.ForeignKey(Projects, on_delete=models.CASCADE, null=True)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project_id = models.ForeignKey(Projects, on_delete=models.CASCADE)
     permission = models.CharField(max_length=150, choices=CHOICES)
